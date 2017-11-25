@@ -3,21 +3,72 @@
 @section('content')
 <div class="container">
     <div class="row">
+        @if(isset($data))
+        @foreach($data as $film)
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+                <div class="panel-heading">{{ $film->name }}</div>
 
                 <div class="panel-body">
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img class="responsive" src="http://via.placeholder.com/300x300" />
 
-                    You are logged in!
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-bordered table-responsive">
+                                <tr>
+                                    <th>
+                                        Country
+                                    </th>
+                                    <td>
+                                        {{ $film->country->country_name}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Release Date
+                                    </th>
+                                    <td>
+                                        {{ $film->release_date}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Rating
+                                    </th>
+                                    <td>
+                                        @for($i = 0; $i <= $film->rating; $i++)
+                                            <span class="glyphicon glyphicon-star"></span>
+                                        @endFor
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Price
+                                    </th>
+                                    <td>
+                                        <b>$ {{ $film->price}}</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="text-center">
+                                    <a class="btn btn-success ">Preview</a> <a class="btn btn-danger">Post a comment</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
+        @endForeach
+
+        <div class="col-md-8 col-md-offset-2 text-center">
+            {{$data->links()}}
+        </div>
+        @endIf
     </div>
 </div>
 @endsection

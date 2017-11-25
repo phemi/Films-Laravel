@@ -10,4 +10,14 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    protected function confirmContentType($response)
+    {
+        if ($response->getStatusCode() == 200) {
+            if ($response->hasHeader('Content-Type') && $response->getHeader('Content-Type')[0] == 'application/json') {
+
+                return true;
+            }
+        }
+    }
 }
