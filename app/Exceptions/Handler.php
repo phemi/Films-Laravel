@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -48,6 +49,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof AuthenticationException) {
+            return response()->json([
+                'hasError' => true,
+                'errors' => [
+                    'code' => 401,
+                    'title' => "Invalid Token",
+                    'message' => "Kindly discard token and try to log in"
+                ]
+            ]);
+        }
         return parent::render($request, $exception);
     }
 }

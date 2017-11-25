@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Comment;
 use App\Models\Film;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class FilmController extends ApiController
 {
@@ -19,12 +22,12 @@ class FilmController extends ApiController
     {
         //
         try{
-            $film = Film::all();
+            $film = Film::select('name','slug','description', 'country_id','rating', 'release_date', 'price', 'photo' )->with('country')->paginate(1);
 
             return $this->respondWithoutError($film);
         }catch(\Exception $ex){
             Log::error("FilmController::index()  ".$ex->getMessage());
-            return $this->respondWithError(500,'Failed to retrieve film list','Something went wrong');
+            return $this->respondWithError(500,'Failed to retrieve film list','Something went wrong'.$ex->getMessage());
         }
 
     }
@@ -37,6 +40,7 @@ class FilmController extends ApiController
     public function create()
     {
         //
+
     }
 
     /**
@@ -48,6 +52,50 @@ class FilmController extends ApiController
     public function store(Request $request)
     {
         //
+        try{
+            //validate the post request
+            $validator = Validator::make($request->all(), [
+
+                'name' => 'required',
+                'slug'=> 'required|max:255|alpha_num|unique:films',
+                'rating'=> 'required|integer|between:1,5',
+                'release_date'=> 'required|Date',
+                'price'=> 'required|regex:/^\d*(\.\d{1,2})?$/',
+                'country_id'=> 'required|exists:countries,id',
+                'photo' => 'mimes:jpeg,bmp,png'
+            ]);
+
+            //if validator fails return json error response
+            if ($validator->fails()) {
+                $msg = "";
+                foreach($validator->errors()->toArray() as $error){
+                    foreach($error as $errorMsg){
+                        $msg .= "". $errorMsg . " " ;
+                    }
+                }
+                return $this->respondWithError(404, 'Film creation failed', $msg);
+            }
+
+            //create film
+            Film::create([
+                'name'=>$request->get('name'),
+                'slug'=>$request->get('slug'),
+                'description'=>$request->get('description'),
+                'rating'=>$request->get('rating'),
+                'release_date'=>$request->get('release_date'),
+                'price'=>$request->get('price'),
+                'country_id'=>$request->get('country_id')
+            ]);
+
+            $response = [
+                'message' => 'Film created!'
+            ];
+
+            return $this->respondWithoutError($response);
+        }catch(\Exception $ex){
+            Log::error("FilmController::store()  ".$ex->getMessage());
+            return $this->respondWithError(404, 'Film creation failed','Something Went wrong');
+        }
     }
 
     /**
@@ -93,5 +141,46 @@ class FilmController extends ApiController
     public function destroy(Film $film)
     {
         //
+    }
+
+    /**
+     * handles comment on a film
+     */
+    public function comment(Request $request){
+        try{
+            //validate the post request
+            $validator = Validator::make($request->all(), [
+
+                'comment' => 'required',
+                'film_id'=> 'required|exists:films,id'
+            ]);
+
+            //if validator fails return json error response
+            if ($validator->fails()) {
+                $msg = "";
+                foreach($validator->errors()->toArray() as $error){
+                    foreach($error as $errorMsg){
+                        $msg .= "". $errorMsg . " " ;
+                    }
+                }
+                return $this->respondWithError(404, 'Failed to comment', $msg);
+            }
+
+            //create film
+            Comment::create([
+                'comment'=>$request->get('comment'),
+                'user_id'=>Auth::user()->id,
+                'film_id'=>$request->get('film_id'),
+            ]);
+
+            $response = [
+                'message' => 'Comment posted!'
+            ];
+
+            return $this->respondWithoutError($response);
+        }catch(\Exception $ex){
+            Log::error("FilmController::comment()  ".$ex->getMessage());
+            return $this->respondWithError(404, 'Failed to comment','Something Went wrong');
+        }
     }
 }

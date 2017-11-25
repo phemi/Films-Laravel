@@ -10,10 +10,10 @@ class Film extends Model
     use SoftDeletes;
     //
     protected $fillable = [
-        'name', 'slug', 'description', 'rating', 'release_date', 'price', 'country_id', 'genre_id', 'photo'
+        'name', 'slug', 'description', 'rating', 'release_date', 'price', 'country_id', 'photo'
     ];
 
-    protected $dates = ['deleted_at', 'release_date'];
+    protected $dates = ['deleted_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -31,5 +31,10 @@ class Film extends Model
     public function genres()
     {
         return $this->hasManyThrough('App\Models\Genre','App\Models\FilmGenres');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo('App\Models\Country')->select('id','country_name');
     }
 }
