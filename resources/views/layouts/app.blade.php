@@ -63,6 +63,8 @@
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
+
+                                    <li><a href="{{ route('create_film') }}">Create Film</a></li>
                                 </ul>
                             </li>
                         @endIf
