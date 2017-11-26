@@ -116,7 +116,7 @@ class HomeController extends Controller
                 'release_date'=> 'required|Date',
                 'price'=> 'required|regex:/^\d*(\.\d{1,2})?$/',
                 'country_id'=> 'required',
-                'photo' => 'mimes:jpeg,bmp,png'
+                'photo' => 'mimes:jpeg,jpg,png'
             ]);
 
             //return with errors if validator fails
@@ -126,17 +126,62 @@ class HomeController extends Controller
             //make a request to the client api  and retrieve the response
             $url = env('API_BASE_URI').'films';
             $http = new \GuzzleHttp\Client();
-            $response = $http->request('POST', $url, [
-                'form_params' => [
-                    'name'=>$request->get('name'),
-                    'slug'=>$request->get('slug'),
-                    'description'=>$request->get('description'),
-                    'rating'=>$request->get('rating'),
-                    'release_date'=>$request->get('release_date'),
-                    'price'=>$request->get('price'),
-                    'country_id'=>$request->get('country_id')
-                ]
-            ]);
+
+            if($request->hasFile('photo')){
+                $photo = $request->file('photo');
+                $response = $http->request('POST', $url, [
+                    'multipart' => [
+                        [
+                            'name' => 'photo',
+                            'filename' => $photo->getClientOriginalName(),
+                            'Mime-Type' => $photo->getClientMimeType(),
+                            'contents' => fopen($photo->getPathname(), 'r'),
+                        ],
+                        [
+                            'name' => 'name',
+                            'contents' => $request->input('name')
+                        ],
+                        [
+                            'name' => 'slug',
+                            'contents' => $request->input('slug')
+                        ],
+                        [
+                            'name' => 'description',
+                            'contents' => $request->input('description')
+                        ],
+                        [
+                            'name' => 'release_date',
+                            'contents' => $request->input('release_date')
+                        ],
+                        [
+                            'name' => 'price',
+                            'contents' => $request->input('price')
+                        ],
+                        [
+                            'name' => 'country_id',
+                            'contents' => $request->input('country_id')
+                        ],
+                        [
+                            'name' => 'rating',
+                            'contents' => $request->input('rating')
+                        ]
+                    ]
+                ]);
+            }else{
+                $response = $http->request('POST', $url, [
+                    'form_params' => [
+                        'name'=>$request->get('name'),
+                        'slug'=>$request->get('slug'),
+                        'description'=>$request->get('description'),
+                        'rating'=>$request->get('rating'),
+                        'release_date'=>$request->get('release_date'),
+                        'price'=>$request->get('price'),
+                        'country_id'=>$request->get('country_id')
+                    ]
+                ]);
+            }
+
+
 
             //if response code is ok
             if ($response->getStatusCode() == 200) {

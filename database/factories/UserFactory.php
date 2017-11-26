@@ -51,7 +51,7 @@ $factory->define(App\Models\Film::class, function (Faker $faker) {
         'rating' => $faker->randomElement([1,2,3,4,5]),
         'price'=> $faker->randomNumber(5),
         'country_id' => \App\Models\Country::all()->random()->id,
-        'photo' => 'film.jpg'
+        'photo' => ''
     ];
 });
 

@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 
 
 Route::group(['prefix' => 'v1'], function () {
+
+    Route::get('image/{image}', 'ImageController@getPost');
     Route::get('/', 'Api\ApiController@sayHello');
     Route::post('register', 'Api\UserController@register');
     Route::post('login', 'Api\UserController@authenticate');

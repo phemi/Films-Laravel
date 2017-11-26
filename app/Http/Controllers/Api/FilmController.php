@@ -6,10 +6,12 @@ use App\Models\Comment;
 use App\Models\Country;
 use App\Models\Film;
 use App\Models\Genre;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class FilmController extends ApiController
@@ -87,6 +89,19 @@ class FilmController extends ApiController
                 return $this->respondWithError(404, 'Film creation failed', $msg);
             }
 
+            $key = "photo";
+            $name = $request->get($key);
+            if ($request->hasFile($key)) {
+
+                //handle photo
+                $original_name = $request->file($key)->getClientOriginalName();
+                $time = new Carbon();
+                $time = $time->timestamp;
+                $name = uniqid()."".$time.".".$request->file($key)->getClientOriginalExtension();
+                Storage::disk('local')->put("films/".$name, file_get_contents($request->file($key)->getRealPath()),  'public');
+
+            }
+
             //create film
             Film::create([
                 'name'=>$request->get('name'),
@@ -95,7 +110,8 @@ class FilmController extends ApiController
                 'rating'=>$request->get('rating'),
                 'release_date'=>$request->get('release_date'),
                 'price'=>$request->get('price'),
-                'country_id'=>$request->get('country_id')
+                'country_id'=>$request->get('country_id'),
+                'photo'=>$name
             ]);
 
             $response = [

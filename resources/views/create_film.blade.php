@@ -20,7 +20,7 @@
                     @endIf
 
                     @endIf
-                    <form class="form-horizontal" method="POST" action="{{ route('create_film') }}">
+                    <form class="form-horizontal" method="POST" action="{{ route('create_film') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -106,6 +106,19 @@
                                     @endForeach
                                     @endIf
                                 </select>
+                            </div>
+                        </div>
+                        <div class="form-group{{ $errors->has('photo') ? ' has-error' : '' }}">
+                            <label for="photo" class="col-md-4 control-label">Picture</label>
+
+                            <div class="col-md-6">
+                                <input id="photo" type="file" class="form-control" name="photo" value="{{ old('photo') }}" required >
+
+                                @if ($errors->has('photo'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('photo') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                         </div>
 

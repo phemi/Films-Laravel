@@ -17,7 +17,7 @@ class CreateFilmTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->char('slug', 255)->unique();
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->enum('rating', [1,2,3,4,5]); //rating is on a scale 1 to 5
             $table->date('release_date');
             $table->decimal('price', 8, 2);

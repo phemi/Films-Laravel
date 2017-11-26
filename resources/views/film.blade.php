@@ -11,7 +11,9 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <img class="responsive" src="http://via.placeholder.com/300x300" />
+                            <div >
+                                <img class="img img-responsive" src="{{empty($film->photo)? 'http://via.placeholder.com/300x300' : env('IMAGE_PATH').$film->photo  }}" />
+                            </div>
 
                         </div>
                         <div class="col-md-6">
@@ -111,7 +113,7 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                Write on wall
+                Leave a comment
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
