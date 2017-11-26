@@ -14,4 +14,12 @@ class Comment extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    /*
+     * belongs to a user
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User')->select('id','name');
+    }
 }

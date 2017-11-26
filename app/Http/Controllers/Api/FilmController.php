@@ -104,9 +104,23 @@ class FilmController extends ApiController
      * @param  \App\Models\Film  $film
      * @return \Illuminate\Http\Response
      */
-    public function show(Film $film)
+    public function show(Request $request, $film)
     {
-        //
+        try{
+            //I really dont like eloquent for this cos of performance issue. But for the sake of this test I would use it.
+            //I prefer raw Sql query
+            $film = Film::select('id','name','slug','description', 'country_id','rating', 'release_date', 'price', 'photo' )
+                ->where('slug',$film)->first();
+
+            if(!empty($film)){
+                //load country, comment and user
+                $film->load('country', 'comments.user', 'filmGenres.genre');
+            }
+            return $this->respondWithoutError($film);
+        }catch(\Exception $ex){
+            Log::error("FilmController::show()  ".$ex->getMessage());
+            return $this->respondWithError(404, 'Film creation failed','Something Went wrong');
+        }
     }
 
     /**

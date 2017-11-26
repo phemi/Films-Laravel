@@ -21,16 +21,16 @@ class Film extends Model
      */
     public function comments()
     {
-        return $this->hasMany('App\Models\Comment');
+        return $this->hasMany('App\Models\Comment','film_id', 'id')->select('comment', 'created_at','user_id', 'film_id');
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      * Film has more than one genre
      */
-    public function genres()
+    public function filmGenres()
     {
-        return $this->hasManyThrough('App\Models\Genre','App\Models\FilmGenres');
+        return $this->hasMany('App\Models\FilmGenres', 'film_id', 'id')->select('film_id','genre_id');
     }
 
     public function country()

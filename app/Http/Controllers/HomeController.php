@@ -51,4 +51,27 @@ class HomeController extends Controller
         }
         //return view('home');
     }
+
+    public function viewFilm(Request $request, $film_slug){
+        try{
+            $url = env('API_BASE_URI').'films'.'/'.$film_slug;
+            $http = new \GuzzleHttp\Client();
+            $response = $http->request('GET', $url);
+
+            if ($this->confirmContentType($response)) {
+                $json_response = json_decode($response->getBody());
+
+                if ($json_response->hasError) {
+                    return back()->with('custom_errors', $json_response->errors->details->message);
+                }
+
+                $film = $json_response->data;
+
+                return view('film')->with(['film'=>$film]);
+            }
+        }catch (\Exception $ex){
+            return $ex->getMessage();
+            //return $this->handleError("HomeController::index()", $ex);
+        }
+    }
 }

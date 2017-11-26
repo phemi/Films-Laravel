@@ -3,8 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row">
-        @if(isset($data))
-        @foreach($data as $film)
+        @if(isset($film))
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">{{ $film->name }}</div>
@@ -52,22 +51,53 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th>
+                                        Genre(s)
+                                    </th>
+                                    <td>
+                                        @foreach($film->film_genres as $filmGenre)
+                                            @if(isset($filmGenre->genre->genre))
+                                                {{$filmGenre->genre->genre}} <br />
+                                            @endIf
+                                        @endForeach
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td colspan="2" class="text-center">
-                                    <a href="{{URL::to('films/'.$film->slug)}}" class="btn btn-success ">Preview</a> <a class="btn btn-danger">Post a comment</a>
+                                     <a class="btn btn-danger">Post a comment</a>
                                     </td>
                                 </tr>
                             </table>
                         </div>
 
                     </div>
+
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <h2>Description</h2>
+                            <p>
+                                {{$film->description}}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-10 col-md-offset-1">
+                            <h3>Comments</h3>
+
+                                @foreach($film->comments as $comment)
+                            <p style="background-color: rgba(101, 100, 100, 0.05) ; padding: 10px 10px 10px 10px; margin-bottom: 10px; ">
+                                    {{$comment->comment}}
+                                <br />
+                                <b>{{$comment->created_at}}</b>
+                            </p>
+                                @endForeach
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        @endForeach
 
-        <div class="col-md-8 col-md-offset-2 text-center">
-            {{$data->links()}}
-        </div>
         @endIf
     </div>
 </div>

@@ -15,4 +15,12 @@ class FilmGenres extends Model
     protected $fillable = [
         'genre_id', 'film_id'
     ];
+
+    /*
+     * Belongs to a genre
+     */
+    public function genre()
+    {
+        return $this->belongsTo('App\Models\Genre')->select('id','genre');
+    }
 }
