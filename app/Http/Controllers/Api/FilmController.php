@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Comment;
+use App\Models\Country;
 use App\Models\Film;
+use App\Models\Genre;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +24,8 @@ class FilmController extends ApiController
     {
         //
         try{
-            $film = Film::select('name','slug','description', 'country_id','rating', 'release_date', 'price', 'photo' )->with('country')->paginate(1);
+            $film = Film::select('name','slug','description', 'country_id','rating', 'release_date', 'price', 'photo' )
+                ->with('country')->orderBy('created_at', 'DESC')->paginate(1);
 
             return $this->respondWithoutError($film);
         }catch(\Exception $ex){
@@ -40,6 +43,14 @@ class FilmController extends ApiController
     public function create()
     {
         //
+        try{
+            $countries = Country::select('country_name', 'id')->get();
+            $genres = Genre::select('id', 'genre')->get();
+            return $this->respondWithoutError(compact('countries','genres'));
+        }catch(\Exception $ex){
+            Log::error("FilmController::show()  ".$ex->getMessage());
+            return $this->respondWithError(404, 'Film creation failed','Something Went wrong');
+        }
 
     }
 
