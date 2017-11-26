@@ -175,7 +175,7 @@ class FilmController extends ApiController
         try{
             //validate the post request
             $validator = Validator::make($request->all(), [
-
+                'name' =>'required',
                 'comment' => 'required',
                 'film_id'=> 'required|exists:films,id'
             ]);
@@ -193,6 +193,7 @@ class FilmController extends ApiController
 
             //create film
             Comment::create([
+                'name' =>$request->get('name'),
                 'comment'=>$request->get('comment'),
                 'user_id'=>Auth::user()->id,
                 'film_id'=>$request->get('film_id'),

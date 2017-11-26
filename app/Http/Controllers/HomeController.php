@@ -162,4 +162,68 @@ class HomeController extends Controller
 
 
     }
+
+    public function comment(Request $request){
+        try{
+            $data = $request->all();
+            $validator = Validator::make($data, [
+                'name'=>'required',
+                'comment'=>'required',
+                'film_id'=> 'required'
+            ]);
+
+            if ($validator->fails()) {
+                $msg = "";
+                foreach($validator->errors()->toArray() as $error){
+                    foreach($error as $errorMsg){
+                        $msg .= "". $errorMsg . " " ;
+                    }
+                }
+                return response()->json([
+                    'hasError'=> true,
+                    'message' => $msg
+                ]);
+            }
+
+            //send it over the api
+            $url = env('API_BASE_URI').'comment';
+            $http = new \GuzzleHttp\Client();
+            $response = $http->request('POST', $url, [
+                'form_params' => [
+                    'name' =>$request->get('name'),
+                    'comment'=>$request->get('comment'),
+                    'film_id'=>$request->get('film_id'),
+                ],
+                'headers' => [
+                    'Authorization' => 'Bearer ' . session('token'),
+                ]
+            ]);
+
+            if ($response->getStatusCode() == 200) {
+                // if the content type header if present
+                //get json response and decode
+                $json_response = json_decode($response->getBody());
+                // the response has no custom error
+                if (!$json_response->hasError) {
+                    return response()->json([
+                        'hasError'=> false,
+                        'message' => 'Successfully posted your message'
+                    ]);
+                } else {
+                    $msg = isset($json_response->errors->message)? $json_response->errors->message : "An error occurred, Please try again";
+                    return response()->json([
+                        'hasError'=> false,
+                        'message' => $msg
+                    ]);
+
+                }
+            }
+
+        }catch(\Exception $ex){
+            return response()->json([
+                'hasError'=> true,
+                'message' => 'An error occurred'
+            ]);
+        }
+    }
 }

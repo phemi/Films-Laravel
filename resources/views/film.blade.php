@@ -64,7 +64,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2" class="text-center">
-                                     <a class="btn btn-danger">Post a comment</a>
+                                     <a class="btn btn-danger"  data-toggle="modal" data-target="#commentModal">Post a comment</a>
                                     </td>
                                 </tr>
                             </table>
@@ -103,4 +103,78 @@
         @endIf
     </div>
 </div>
+
+
+<div id="commentModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                Write on wall
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+
+            <div class="modal-body">
+                <div class="form-group">
+                    <label >Name</label>
+                    <input id="name" name="name" placeholder="" class="form-control" type="text"  />
+                    <input type="hidden" name="film_id" value="{{$film->id}}" />
+                </div>
+
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea id="comment" name="comment" class="form-control"></textarea>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <style>
+                    .loading{
+                        display: none;
+                    }
+                </style>
+                <button name="loading" id="loading" class="loading btn btn-primary "  >Sending...</button>
+                <button  id="commentSubmit" class="btn btn-primary" >Post</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+
+<script>
+    $(document).ready(function() {
+            $("#loading").hide();
+            $('#commentSubmit').on('click', function (e) {
+                e.preventDefault();
+                $('#commentSubmit').hide();
+                $("#loading").show();
+                var name = $('#name').val();
+                var comment = $('#comment').val();
+                $.ajax({
+                    type: "POST",
+                    url: "/comment-on-film",
+                    data: {name: name, comment: comment, film_id: '{{$film->id}}', _token: "{{csrf_token()}}" },
+        success: function( data ) {
+        if(data.hasError){
+            $('#commentSubmit').show();
+            $("#loading").hide();
+            alert(data.message);
+        }else{
+            $('#commentSubmit').hide();
+            $("#loading").hide();
+            alert(data.message);
+            $('#commentModal').modal('hide');
+        }
+    }
+    });
+    });
+    });
+</script>
 @endsection

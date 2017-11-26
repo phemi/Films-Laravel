@@ -21,3 +21,4 @@ Route::get('/films', 'HomeController@index')->name('home');
 Route::get('/films/create', 'HomeController@createFilm')->name('create_film');
 Route::get('/films/{film_slug}', 'HomeController@viewFilm')->name('films');
 Route::post('/films/create', 'HomeController@storeFilm')->name('create_film');
+Route::post('/comment-on-film', 'HomeController@comment');
