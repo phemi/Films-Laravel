@@ -20,4 +20,11 @@ class Controller extends BaseController
             }
         }
     }
+
+    protected function setUserSession($user, $token){
+        session()->regenerate();
+        session(['token' => $token]);
+        session(['user'=> $user]);
+        session(['logged-in' => true]);
+    }
 }

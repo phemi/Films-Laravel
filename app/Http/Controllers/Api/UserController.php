@@ -88,7 +88,7 @@ class UserController extends ApiController
                 $token = $user->createToken('film-manager')->accessToken;
                 // all good so return the token
 
-                $data = ['token'=>$token, "name" => $user->name, "email"=>$user->email];
+                $data = ['token'=>$token, "user" => $user->name, "email"=>$user->email];
                 return $this->respondWithoutError($data);
             }else{
                 return $this->respondWithError(401,'Authentication Failed','Invalid email or password');

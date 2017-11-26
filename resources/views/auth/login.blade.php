@@ -8,6 +8,18 @@
                 <div class="panel-heading">Login</div>
 
                 <div class="panel-body">
+                    @if(session('toast'))
+                    @if(session('toast_level') == 'warning')
+                    <div class="row alert alert-danger">
+                        <p><ul>{{session('toast')}}</ul></p>
+                    </div>
+                    @else
+                    <div class="row alert alert-success">
+                        <p>{{session('toast')}}</p>
+                    </div>
+                    @endIf
+
+                    @endIf
                     <form class="form-horizontal" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
 
