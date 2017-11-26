@@ -114,7 +114,7 @@ class FilmController extends ApiController
 
             if(!empty($film)){
                 //load country, comment and user
-                $film->load('country', 'comments.user', 'filmGenres.genre');
+                $film->load('country', 'comments', 'filmGenres.genre');
             }
             return $this->respondWithoutError($film);
         }catch(\Exception $ex){

@@ -21,7 +21,7 @@ class Film extends Model
      */
     public function comments()
     {
-        return $this->hasMany('App\Models\Comment','film_id', 'id')->select('comment', 'created_at','user_id', 'film_id');
+        return $this->hasMany('App\Models\Comment','film_id', 'id')->select('comment', 'created_at', 'name', 'film_id');
     }
 
     /**

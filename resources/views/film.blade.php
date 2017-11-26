@@ -87,7 +87,9 @@
 
                                 @foreach($film->comments as $comment)
                             <p style="background-color: rgba(101, 100, 100, 0.05) ; padding: 10px 10px 10px 10px; margin-bottom: 10px; ">
-                                    {{$comment->comment}}
+                                <b>{{$comment->name}}</b>
+                                <br />
+                                {{$comment->comment}}
                                 <br />
                                 <b>{{$comment->created_at}}</b>
                             </p>
