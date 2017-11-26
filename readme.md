@@ -32,7 +32,6 @@ Film Shop is a simple application developed to show how to use RESTful API, DB, 
 - Migrate the tables (Run: php artisan migrate)
 - Initialise Passport. (Run: php artisan passport:install)
 - Seed the database (Run: php artisan db:seed)
-k you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
 
 ## Security Vulnerabilities/Bugs
 
