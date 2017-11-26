@@ -10,7 +10,7 @@ class Comment extends Model
     use SoftDeletes;
     //
     protected $fillable = [
-        'comment', 'user_id', 'film_id',
+        'comment', 'user_id', 'film_id', 'name'
     ];
 
     protected $dates = ['deleted_at'];

@@ -72,6 +72,7 @@ $factory->define(App\Models\FilmGenres::class, function (Faker $faker)  {
 $factory->define(App\Models\Comment::class, function (Faker $faker) {
 
     return [
+        'name' => $faker->name,
         'comment' => $faker->paragraph,
         'user_id' => \App\Models\User::all()->random()->id,
         'film_id' => function () { return factory(App\Models\Film::class)->create()->id; }
