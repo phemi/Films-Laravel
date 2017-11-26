@@ -110,6 +110,7 @@
 <div id="commentModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
+        @if(session('token'))
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
@@ -142,7 +143,14 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
-
+        @else
+        <div class="modal-content">
+            <div class="modal-body">
+            <h2>You need to be logged in to post a comment</h2>
+                <a href="{{URL::to('login')}}" class="btn btn-success ">Login</a>
+            </div>
+        </div>
+        @endIf
     </div>
 </div>
 <script
